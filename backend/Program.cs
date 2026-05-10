@@ -1,6 +1,7 @@
 using backend.Data;
 using backend.DTOs;
 using backend.Endpoints;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -30,6 +31,13 @@ builder.Services.AddCors(options =>
                   .AllowAnyMethod();
         });
 });
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.Authority = "https://dev-4mwvp3ujugaiq3kv.us.auth0.com/";
+        options.Audience = "https://localhost:5111/api/users";
+    });
 
 var app = builder.Build();
 

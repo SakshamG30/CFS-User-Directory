@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import toast, { Toaster } from 'react-hot-toast';
+import LoginModal from "./LoginModal";
+import { useAuth0 } from "@auth0/auth0-react";
 
 interface CreateUserRequest {
     name: string;
@@ -13,6 +15,8 @@ interface CreateUserRequest {
 function AddUser() {
     const navigate = useNavigate();
     const API_URL = import.meta.env.VITE_API_URL;
+    const { isAuthenticated, loginWithRedirect, getAccessTokenSilently } = useAuth0();
+    const [showModal, setShowModal] = useState(!isAuthenticated);
 
     const [formData, setFormData] = useState<CreateUserRequest>({
        name: "",
@@ -30,6 +34,9 @@ function AddUser() {
         pincode: ""
    });
 
+    const handleLogin = () => {
+        setShowModal(false);
+    };
    // Helper functions to validate form fields
     const validateName = (name: string): string => {
          if (!name) return "Name is required.";
@@ -79,7 +86,7 @@ function AddUser() {
         if (name === 'pincode') setErrorMessage({ ...errorMessage, pincode: '' });
     }
 
-    const handleSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {
+    const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
         e.preventDefault();
 
         const nameError = validateName(formData.name);
@@ -100,10 +107,13 @@ function AddUser() {
             return; 
         }
 
+        const token = await getAccessTokenSilently();
+
         fetch(`${API_URL}/api/users`, {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
             },
             body: JSON.stringify({
                 name: formData.name,
@@ -129,6 +139,7 @@ function AddUser() {
 
    return (
     <>
+    <div className={showModal ? 'opacity-50 pointer-events-none' : ''}>
        <form onSubmit={handleSubmit} className="max-w-2xl mx-auto p-6 rounded-lg shadow-md">
               <h3 className="text-2xl font-bold mb-4">Add User Form</h3>
               <div className="p-5 mb-10">
@@ -192,6 +203,8 @@ function AddUser() {
                     <button type="submit" className="px-4 py-2 bg-violet-500 text-white rounded-md hover:bg-purple-600 transition-colors">Add User</button>
               </div>
        </form>
+       </div>
+       <LoginModal isOpen={showModal} onLogin = {handleLogin}/>
        <Toaster position="top-right" />
       </> 
    );

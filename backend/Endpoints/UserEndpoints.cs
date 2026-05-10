@@ -42,7 +42,7 @@ public static class UserEndPoints
 
             UserDTO userDTO = user.ToDTO();
             return Results.CreatedAtRoute(baseNameById, new { id = user.Id }, userDTO);
-        }).WithName("CreateUser");
+        }).WithName("CreateUser").RequireAuthorization();
 
         // UPDATE EXISTING USER
         group.MapPut("/{id}", (int id, CreateUserDTO updatedUser, UserProfileContext dbContext) =>
