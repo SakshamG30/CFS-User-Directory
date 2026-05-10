@@ -25,7 +25,7 @@ A full-stack user management application built with React, .NET 8 Web API, and S
 
 ## Development Process
 
-**Phase 1: Project Setup: **
+**Phase 1: Project Setup:**
 Created React + TypeScript + Vite project. Installed Tailwind CSS and React Router.
 
 **Phase 2: Frontend First (Hardcoded Data):**
