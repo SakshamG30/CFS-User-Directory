@@ -25,22 +25,22 @@ A full-stack user management application built with React, .NET 8 Web API, and S
 
 ## Development Process
 
-**Phase 1: Project Setup**
+**Phase 1: Project Setup: **
 Created React + TypeScript + Vite project. Installed Tailwind CSS and React Router.
 
-**Phase 2: Frontend First (Hardcoded Data)**
+**Phase 2: Frontend First (Hardcoded Data): **
 Built UserList with 3 hardcoded users. Created AddUser form with validation functions (name, age, city, state, pincode). Added inline error messages and success toast using react-hot-toast. Implemented Navbar with React Router for navigation.
 
-**Phase 3: Backend & Database**
+**Phase 3: Backend & Database: **
 Set up .NET 8 Web API with SQLite and EF Core. Organized code into separate folders: Entities, DTOs, Endpoints, Mappings, Data. Added Swagger for API testing and documentation. Tested with local data first, then created entity and DbContext, migrated using EF Core library. Configured DbContext instance to migrate at startup.
 
-**Phase 4: API Integration**
+**Phase 4: API Integration: **
 Connected frontend to backend. UserList fetches from GET /api/users on mount. AddUser posts to POST /api/users. Added loading spinners and error handling with toast notifications.
 
-**Phase 5: Docker**
+**Phase 5: Docker: **
 Created Dockerfiles for frontend (Node 22) and backend (.NET 8). Added docker-compose.yml to run both services together with volume mounts for development.
 
-**Phase 6: Security & Authentication (Bonus - Partial)**
+**Phase 6: Security & Authentication (Bonus - Partial): **
 Integrated Auth0 OAuth2. Backend configured with JWT Bearer authentication. Frontend sends Bearer token.
 Add page requires login (via Auth0 or existing username). User List remains public.
 
