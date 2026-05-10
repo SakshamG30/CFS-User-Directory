@@ -1,0 +1,25 @@
+services:
+  backend:
+    build: ./backend
+    ports:
+      - "5111:5111"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:5111
+    volumes:
+      - ./backend:/src
+      - /src/bin
+      - /src/obj
+  frontend:
+    build: ./frontend
+    ports:
+      - "5173:5173"
+    environment:
+      - VITE_AUTH0_DOMAIN=dev-4mwvp3ujugaiq3kv.us.auth0.com
+      - VITE_AUTH0_CLIENT_ID=89fexSUoMmtokkXcIEdBoKrHITn3R5pw
+      - VITE_API_URL=http://localhost:5111
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    depends_on:
+      - backend

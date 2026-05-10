@@ -39,6 +39,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         options.Audience = "https://localhost:5111/api/users";
     });
 
+builder.Services.AddAuthorization();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -49,7 +51,9 @@ if (app.Environment.IsDevelopment())
 }
 
 
-app.UseCors("AllowReactApp");
+app.UseCors("AllowReactApp");        // CORS first
+// app.UseAuthentication();              // 2. Authentication second
+// app.UseAuthorization();             // 3. Authorization last
 
 app.MapUserEndpoints();
 

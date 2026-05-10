@@ -107,14 +107,18 @@ function AddUser() {
             return; 
         }
 
-        const token = await getAccessTokenSilently();
+        const token = await getAccessTokenSilently().catch(() => null);
 
+        const headers = {
+            'Content-Type': 'application/json'
+        };
+
+        if (token) {
+            headers['Authorization'] = `Bearer ${token}`;
+        }
         fetch(`${API_URL}/api/users`, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-            },
+            headers: headers,
             body: JSON.stringify({
                 name: formData.name,
                 age: Number(formData.age),
