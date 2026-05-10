@@ -46,8 +46,6 @@ Add page requires login (via Auth0 or existing username). User List remains publ
 
 ## Features Status
 
-## Features Status
-
 | Feature | Complete |
 |---------|----------|
 | List View (GET /api/users) | ✓ |
