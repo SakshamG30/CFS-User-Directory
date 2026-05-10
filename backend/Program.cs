@@ -10,12 +10,26 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddControllers();
+
 var connDbString = builder.Configuration.GetConnectionString("DefaultConnection");
 
 builder.Services.AddSqlite<UserProfileContext>(connDbString);
 
 // To ensure new instance will be created for each HTTP request, and the same instance will be used within that request.
 // builder.Services.AddScoped<UserProfileContext>();
+
+// Add CORS
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowReactApp",
+        policy =>
+        {
+            policy.WithOrigins("http://localhost:5173")
+                  .AllowAnyHeader()
+                  .AllowAnyMethod();
+        });
+});
 
 var app = builder.Build();
 
@@ -26,10 +40,15 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+
+app.UseCors("AllowReactApp");
+
 app.MapUserEndpoints();
 
 app.UseHttpsRedirection();
 
 app.MigrateDb();
+
+app.MapControllers();
 
 app.Run();

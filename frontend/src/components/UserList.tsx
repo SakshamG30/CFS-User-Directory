@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
 
 interface User {
@@ -12,16 +12,37 @@ interface User {
 
 function UserList() {
 
-    const users: User[] = [
-    { id: 1, name: "Alice", age: 28, city: "Boston", state: "MA", pincode: "02101" },
-    { id: 2, name: "Bob", age: 35, city: "Seattle", state: "WA", pincode: "98101" },
-    { id: 3, name: "Charlie", age: 42, city: "Denver", state: "CO", pincode: "80201" },
-    ];
+    const API_URL = import.meta.env.VITE_API_URL;
 
-
-    //const [users, setUsers] = useState<User[]>([]);
+    const [users, setUsers] = useState<User[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
-    const [error, setError] = useState<string>("");
+
+    useEffect(() => {
+        fetch(`${API_URL}/api/users`).then(response => {
+            if (!response.ok) {
+                throw new Error("Failed to fetch users.");
+            }
+            return response.json();
+        })
+        .then(data => {
+            setUsers(data);
+            setLoading(false);
+        }).catch(error => {
+            setLoading(false);
+            toast.error(error.message || "An error occured");
+        });
+    }, []);
+
+    if (loading) {
+        return (
+            <div className="flex justify-center items-center py-12">
+                <div className="text-center">
+                    <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-violet-500"></div>
+                    <p className="mt-2 text-gray-600">Loading users...</p>
+                </div>
+            </div>
+        );
+    }
 
     if (users.length==0){
         return <p className="text-center text-gray-500">No users found.</p>;

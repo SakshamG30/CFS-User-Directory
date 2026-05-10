@@ -12,7 +12,9 @@ interface CreateUserRequest {
 
 function AddUser() {
     const navigate = useNavigate();
-   const [formData, setFormData] = useState<CreateUserRequest>({
+    const API_URL = import.meta.env.VITE_API_URL;
+
+    const [formData, setFormData] = useState<CreateUserRequest>({
        name: "",
        age: 0,
        city: "",
@@ -20,7 +22,7 @@ function AddUser() {
        pincode: ""
    });
 
-   const [errorMessage, setErrorMessage] = useState({
+    const [errorMessage, setErrorMessage] = useState({
         name: "",
         age: "",
         city: "",
@@ -77,7 +79,7 @@ function AddUser() {
         if (name === 'pincode') setErrorMessage({ ...errorMessage, pincode: '' });
     }
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {
         e.preventDefault();
 
         const nameError = validateName(formData.name);
@@ -98,10 +100,31 @@ function AddUser() {
             return; 
         }
 
-        toast.success('User added successfully!');
-        setTimeout(() => {
-            navigate('/');
-        }, 1000);
+        fetch(`${API_URL}/api/users`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                name: formData.name,
+                age: Number(formData.age),
+                city: formData.city,
+                state: formData.state,
+                pincode: formData.pincode
+            }),
+        }).then(response => {
+            if(!response.ok){
+                throw new Error("Failed to add user.");
+            }
+            return response.json();
+        }).then(() => {
+            toast.success('User added successfully!');
+            setTimeout(() => {
+                navigate('/');
+            }, 1000);
+        }).catch(error => {
+            toast.error(error.message || "An error occurred while adding user.");
+        });
     }
 
    return (
@@ -169,6 +192,7 @@ function AddUser() {
                     <button type="submit" className="px-4 py-2 bg-violet-500 text-white rounded-md hover:bg-purple-600 transition-colors">Add User</button>
               </div>
        </form>
+       <Toaster position="top-right" />
       </> 
    );
 }
