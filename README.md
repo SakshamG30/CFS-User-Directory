@@ -81,6 +81,9 @@ cd frontend
 npm install
 npm run dev
 # Frontend runs at http://localhost:5173
+```
 
 ### With Docker
+```bash
 docker-compose up --build
+```
